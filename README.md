@@ -41,23 +41,34 @@ scripts/   ← 三个零依赖脚本：路由菜单生成与校验 / 脱敏 / �
 
 | 你的情况 | 要不要自己动手 | 怎么装 |
 |---|---|---|
-| 用 DSH / Cursor，且 AI 能跑终端 | **不用，说一句话** | 见 ① |
+| 任何能跑终端的 AI 工具（DSH / Cursor / Claude Code / Codex） | **不用，说一句话** | 见 ① |
 | 用 DSH，想要最省事 | 双击一次 | 见 ② |
-| 用 Claude Code / Codex | 打两条斜杠命令 | 见 ④ |
 | 装到所有工具、或换系统 | 一条命令 | 见 ③ |
+| 只能用纯网页版 AI（没有终端） | ❌ 装不了 | 见 ④ |
 | 只在这个仓库里用 | 零动作 | 见 ⑤ |
 
-### ① 说一句话就装（自然语言，AI 替你执行）
+### ① 说一句话就装（任何能跑终端的 AI 工具）
 
-在会话里直接说：
+在会话里发一句：
 
 ```
-把这个仓库 clone 到 <你的目录>\my-awesome-skills
-再把它的 skills/ 挂到我用户级技能目录
+安装 https://github.com/yaojiehua-miraculous/my-awesome-skills
 ```
 
-AI 只要有终端权限就能自己做完（DSH、Cursor 都可以）。唯一代价：目标目录在仓库外时，
-会弹一次写盘授权，点同意即可。
+**AI 会自己完成：clone → 把 `skills/` 复制到你所用工具的技能目录 → 告诉你装了几个。**
+不需要你敲任何命令，也不需要你记路径。
+
+为什么能做到？因为这**不是工具的能力，是 AI 的能力**——它手上有终端和文件写入权限，
+就能替你 clone 和复制。所以 DSH、Cursor、Claude Code、Codex 都一样能用这一句。
+
+前提只有两个：AI 有终端权限、机器能联网。目录在仓库外时它会先问你一次授权，点同意即可。
+
+**两种安装形态，效果不同**：
+
+| 形态 | 怎么触发 | 特点 |
+|---|---|---|
+| 文件级（一句话即可） | 说「安装 <地址>」 | 复制一份到你机器上；之后上游更新不会自动同步 |
+| 官方插件（要斜杠命令） | `/plugin marketplace add …` | 有版本号、可更新、可卸载；但只能打命令，自然语言装不了 |
 
 ### ② 双击就装（Windows，零命令）
 
@@ -78,14 +89,10 @@ npx my-awesome-skills --unlink         # 卸载
 
 npm 版是**复制**技能（不是链接），好处是不依赖本仓库还在不在；想用链接加 `--link`。
 
-### ④ 两条斜杠命令（Claude Code / Codex，自然语言装不了）
+### ④ 纯网页版 AI（豆包、千问网页等）装不了
 
-```text
-/plugin marketplace add <用户名>/my-awesome-skills
-/plugin install my-awesome-skills@awesome-skills
-```
-
-Codex 换成 `codex plugin marketplace add <用户名>/my-awesome-skills`。
+它们没有终端、不能写你的磁盘，只能读网页内容。这种情况只能降级：把 `AGENTS.md`
+的内容贴进对话，或手动把 `skills/` 里的文件放进项目。
 
 ### ⑤ 零动作：只在这个仓库里用
 
@@ -108,17 +115,21 @@ python scripts/mount.py --unlink --user          # 撤销
 
 ## 各宿主装到哪
 
-| 工具 | 装到这个目录 | 会话里用自然语言能装吗 | 正确的装法 |
-|---|---|---|---|
-| DeepSeek Harness | `~/.dsh/skills` | ✅ 能 | 说一句话让 AI 代劳；或双击 `install.cmd` |
-| Cursor（与 DSH 共用一份） | `~/.agents/skills` | ✅ 能 | `npx my-awesome-skills --host agents` |
-| Cursor（单独） | `~/.cursor/skills` | ✅ 能 | `npx my-awesome-skills --host cursor` |
-| Claude Code | `~/.claude/skills` | ❌ **不支持** | `/plugin marketplace add <用户名>/my-awesome-skills` |
-| Codex | `~/.codex/skills` | ❌ **不支持** | `codex plugin marketplace add <用户名>/my-awesome-skills` |
-| 只认规则文件的工具 | 项目根 `AGENTS.md` | ❌ **不支持** | 把 `AGENTS.md` 放进项目（降级，非等价） |
-| 任意宿主（npm 通道） | 由 CLI 决定 | ✅ 能 | 说「跑一下 npx my-awesome-skills」，或自己跑 |
+「一句话能装吗」= 你在会话里发一句 `安装 <GitHub 地址>`，AI 自己 clone 并放进下表目录。
 
-**装不上怎么办**：直接开 issue 反馈，把工具名 + 版本 + 报错贴上去。
+| 工具 | 装到这个目录 | 一句话「安装 <地址>」能装吗 | AI 会怎么做 | 官方插件机制 |
+|---|---|---|---|---|
+| DeepSeek Harness | `~/.dsh/skills` | ✅ 能 | clone → 挂链接到技能目录 | 无（插件是 npm 包） |
+| Cursor | `~/.agents/skills`（与 DSH 共用）或 `~/.cursor/skills` | ✅ 能 | clone → 复制进去 | 有市场，需审核 |
+| Claude Code | `~/.claude/skills` | ✅ 能 | clone → 复制进去 | 有，`/plugin marketplace add` |
+| Codex | `~/.codex/skills` | ✅ 能 | clone → 复制进去 | 有，`codex plugin marketplace add` |
+| 只认规则文件的工具 | 项目根 `AGENTS.md` | ⚠️ 只能降级 | 把 `AGENTS.md` 放进项目 | 无 |
+| 纯网页版 AI（豆包/千问网页） | —— | ❌ 不能（没有终端） | —— | 无 |
+
+**关键**：`✅ 能` 的原因不是工具支持，而是 **AI 手上有终端和写文件权限**——它替你 clone 和复制。
+所以这条对任何"能跑命令"的 AI 工具都成立；`❌` 只留给没有终端的纯网页版。
+
+**装不上怎么办**：开 issue 反馈，把工具名 + 版本 + 报错贴上去。
 **逐工具的完整装法、三步自测法、故障排查 → [docs/LOADING.md](docs/LOADING.md)**（新手先看那个）
 
 `mount.py --help` 可看全部参数。任何不确定的宿主，`--dest` 都能兜底。
