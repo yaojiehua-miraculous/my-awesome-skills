@@ -55,6 +55,54 @@ git log --all --oneline -- personal | head
 
 只过两问 → 退回。这是唯一的评审标准，不设其他门槛。
 
+## 发布到 npm（第二条分发通道）
+
+和 ponytail 保持一致：仓库本身既是插件市场，也是一个 npm 包。
+
+```bash
+# 1) 先看一眼会被打进去什么（这一步必须做，`personal/` 绝不能进包）
+npm pack --dry-run
+
+# 2) 登录（一次即可，token 存在你机器上）
+npm login
+
+# 3) 发布
+npm publish --access public
+```
+
+包内容由 `package.json` 的 `files` 白名单决定，当前只含：
+`skills/`、`plugin.json`、`.claude-plugin/`、`AGENTS.md`、`README.md`、`LICENSE`、`scripts/cli.js`。
+`personal/`、`docs/`、`examples/` 都不在名单里——这是刻意的。
+
+### 版本号规则
+
+| 变更 | 命令 |
+|---|---|
+| 加技能 / 改引擎行为 | `npm version minor && git push --follow-tags` |
+| 改字段 / 破坏兼容 | `npm version major && git push --follow-tags` |
+| 改错别字 | `npm version patch && git push --follow-tags` |
+
+**三处版本号要保持一致**：`package.json`、`plugin.json`、`.claude-plugin/plugin.json`。
+发版前跑一次下面的检查：
+
+```bash
+node -e "const f=require('fs');const v=['package.json','plugin.json','.claude-plugin/plugin.json'].map(p=>JSON.parse(f.readFileSync(p)).version);console.log(v, new Set(v).size===1?'一致':'不一致')"
+```
+
+### 如果包名被占用
+
+`my-awesome-skills` 很可能已经有人注册。改成作用域包（推荐，和 ponytail 的
+`@dietrichgebert/ponytail` 同一种做法）：
+
+```bash
+npm init --scope=@yaojiehua-miraculous   # 会改成 @yaojiehua-miraculous/my-awesome-skills
+npm publish --access public
+```
+
+作用域名 = 你的 npm 用户名时不需要额外建组织。
+
+---
+
 ## 打标签与发布
 
 ```bash

@@ -51,6 +51,18 @@ scripts/   ← 三个零依赖脚本：路由菜单生成与校验 / 脱敏 / �
 - 撤销：双击 `uninstall.cmd`（只删链接，不动你的技能文件）。
 - macOS / Linux：`sh install.sh`。
 
+### 或者用 npm（任意系统、任意工具）
+
+```bash
+npx my-awesome-skills                  # 装到默认宿主（有 ~/.dsh 就用它，否则用 ~/.agents）
+npx my-awesome-skills --host claude    # dsh / agents / claude / codex / cursor
+npx my-awesome-skills --all            # 所有宿主都装一份
+npx my-awesome-skills --unlink         # 卸载
+npx my-awesome-skills --list           # 看看装了什么
+```
+
+npm 版会把技能**复制**过去（不是链接），所以不依赖本仓库是否还在；想用链接加 `--link`。
+
 ### 开发者 / 想调参数
 
 ```bash
@@ -76,6 +88,7 @@ python scripts/mount.py --unlink --user          # 撤销
 | Claude Code | `~/.claude/skills` | `python scripts/mount.py --dest %USERPROFILE%\.claude\skills` | 二手证据 |
 | Codex | `~/.codex/skills` | `python scripts/mount.py --dest %USERPROFILE%\.codex\skills` | 未实测 |
 | 只认规则文件的工具 | 项目根 `AGENTS.md` | 贴规则（**降级，非等价**） | —— |
+| 任意宿主（npm 通道） | 由 CLI 决定 | `npx my-awesome-skills` | ✅ bin 本地实测 |
 
 **逐工具的完整装法、三步自测法、故障排查 → [docs/LOADING.md](docs/LOADING.md)**（新手先看那个）
 
@@ -106,6 +119,7 @@ DSH 没有这条路（它的插件是 npm 包，不吃 Git 地址）。
 |---|---|
 | `install.cmd` / `uninstall.cmd` | 双击即装 / 双击即撤（Windows，零命令、不依赖 Python） |
 | `install.sh` | macOS / Linux 版安装脚本 |
+| `package.json` + `scripts/cli.js` | npm 通道：`npx my-awesome-skills`（零依赖，Node 18+） |
 | [`AGENTS.md`](AGENTS.md) | 每轮必读的五步纪律（供读 `AGENTS.md` 的宿主使用） |
 | `skills/master-orchestrator/` | 统筹指挥人：只做选择题、不做问答题；文件末尾就是 L0 路由菜单 |
 | `skills/skill-forge/` | 采集沉淀：脏对话 → 三字段压缩 → 强制脱敏 → 查重 → 落盘回读 |
