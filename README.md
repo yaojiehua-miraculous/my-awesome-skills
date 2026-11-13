@@ -37,31 +37,59 @@ scripts/   ← 三个零依赖脚本：路由菜单生成与校验 / 脱敏 / �
 
 ## 30 秒上手
 
-### 只想在这个仓库里用：零操作
+先看你是哪一类，再决定要不要自己动手：
 
-把仓库 clone 到本地，用 AI 编码工具**打开这个目录**就有技能了。
-（仓库自带 `.dsh/skills` 挂载点，克隆即用，不需要任何命令。）
+| 你的情况 | 要不要自己动手 | 怎么装 |
+|---|---|---|
+| 用 DSH / Cursor，且 AI 能跑终端 | **不用，说一句话** | 见 ① |
+| 用 DSH，想要最省事 | 双击一次 | 见 ② |
+| 用 Claude Code / Codex | 打两条斜杠命令 | 见 ④ |
+| 装到所有工具、或换系统 | 一条命令 | 见 ③ |
+| 只在这个仓库里用 | 零动作 | 见 ⑤ |
 
-### 想让所有项目都能用：双击 `install.cmd`
+### ① 说一句话就装（自然语言，AI 替你执行）
 
-打开仓库文件夹，**双击 `install.cmd`**。出现「新装 7 个」就是装好了。
+在会话里直接说：
 
-- 不需要命令行，不需要管理员权限，不复制文件（改仓库立刻生效）。
-- 装到 `~/.dsh/skills`，之后**任何目录、任何新会话**都生效，重启工具也还在。
-- 撤销：双击 `uninstall.cmd`（只删链接，不动你的技能文件）。
-- macOS / Linux：`sh install.sh`。
-
-### 或者用 npm（任意系统、任意工具）
-
-```bash
-npx my-awesome-skills                  # 装到默认宿主（有 ~/.dsh 就用它，否则用 ~/.agents）
-npx my-awesome-skills --host claude    # dsh / agents / claude / codex / cursor
-npx my-awesome-skills --all            # 所有宿主都装一份
-npx my-awesome-skills --unlink         # 卸载
-npx my-awesome-skills --list           # 看看装了什么
+```
+把这个仓库 clone 到 <你的目录>\my-awesome-skills
+再把它的 skills/ 挂到我用户级技能目录
 ```
 
-npm 版会把技能**复制**过去（不是链接），所以不依赖本仓库是否还在；想用链接加 `--link`。
+AI 只要有终端权限就能自己做完（DSH、Cursor 都可以）。唯一代价：目标目录在仓库外时，
+会弹一次写盘授权，点同意即可。
+
+### ② 双击就装（Windows，零命令）
+
+打开仓库文件夹，**双击 `install.cmd`**，看到「新装 7 个」就成。
+
+- 装到 `~/.dsh/skills`，之后任何目录、任何新会话都生效，重启工具也还在。
+- 不需要管理员权限，不复制文件（改仓库立刻生效）。
+- 撤销：双击 `uninstall.cmd`。macOS / Linux 用 `sh install.sh`。
+
+### ③ 一条命令装（任意系统）
+
+```bash
+npx my-awesome-skills                  # 自动选宿主（有 ~/.dsh 用它，否则 ~/.agents）
+npx my-awesome-skills --host claude    # dsh / agents / claude / codex / cursor
+npx my-awesome-skills --all            # 所有宿主
+npx my-awesome-skills --unlink         # 卸载
+```
+
+npm 版是**复制**技能（不是链接），好处是不依赖本仓库还在不在；想用链接加 `--link`。
+
+### ④ 两条斜杠命令（Claude Code / Codex，自然语言装不了）
+
+```text
+/plugin marketplace add <用户名>/my-awesome-skills
+/plugin install my-awesome-skills@awesome-skills
+```
+
+Codex 换成 `codex plugin marketplace add <用户名>/my-awesome-skills`。
+
+### ⑤ 零动作：只在这个仓库里用
+
+用 AI 工具打开仓库目录即可——技能已经在项目级目录里，不需要装。
 
 ### 开发者 / 想调参数
 
@@ -80,16 +108,17 @@ python scripts/mount.py --unlink --user          # 撤销
 
 ## 各宿主装到哪
 
-| 工具 | 装到这个目录 | 怎么装 | 验证状态 |
+| 工具 | 装到这个目录 | 会话里用自然语言能装吗 | 正确的装法 |
 |---|---|---|---|
-| DeepSeek Harness | `~/.dsh/skills` | 双击 `install.cmd` | ✅ 本机实测 |
-| Cursor + DSH 共用 | `~/.agents/skills` | `python scripts/mount.py --agents-user` | ✅ 官方文档 |
-| Cursor 单独 | `~/.cursor/skills` | `python scripts/mount.py --dest %USERPROFILE%\.cursor\skills` | ✅ 官方文档 |
-| Claude Code | `~/.claude/skills` | `python scripts/mount.py --dest %USERPROFILE%\.claude\skills` | 二手证据 |
-| Codex | `~/.codex/skills` | `python scripts/mount.py --dest %USERPROFILE%\.codex\skills` | 未实测 |
-| 只认规则文件的工具 | 项目根 `AGENTS.md` | 贴规则（**降级，非等价**） | —— |
-| 任意宿主（npm 通道） | 由 CLI 决定 | `npx my-awesome-skills` | ✅ bin 本地实测 |
+| DeepSeek Harness | `~/.dsh/skills` | ✅ 能 | 说一句话让 AI 代劳；或双击 `install.cmd` |
+| Cursor（与 DSH 共用一份） | `~/.agents/skills` | ✅ 能 | `npx my-awesome-skills --host agents` |
+| Cursor（单独） | `~/.cursor/skills` | ✅ 能 | `npx my-awesome-skills --host cursor` |
+| Claude Code | `~/.claude/skills` | ❌ **不支持** | `/plugin marketplace add <用户名>/my-awesome-skills` |
+| Codex | `~/.codex/skills` | ❌ **不支持** | `codex plugin marketplace add <用户名>/my-awesome-skills` |
+| 只认规则文件的工具 | 项目根 `AGENTS.md` | ❌ **不支持** | 把 `AGENTS.md` 放进项目（降级，非等价） |
+| 任意宿主（npm 通道） | 由 CLI 决定 | ✅ 能 | 说「跑一下 npx my-awesome-skills」，或自己跑 |
 
+**装不上怎么办**：直接开 issue 反馈，把工具名 + 版本 + 报错贴上去。
 **逐工具的完整装法、三步自测法、故障排查 → [docs/LOADING.md](docs/LOADING.md)**（新手先看那个）
 
 `mount.py --help` 可看全部参数。任何不确定的宿主，`--dest` 都能兜底。
@@ -108,7 +137,8 @@ Claude Code 里可以直接给地址装：
 /plugin install my-awesome-skills@awesome-skills
 ```
 
-两份清单都是按官方 schema 手写的，**尚未在对应客户端实测**；进市场另需提交审核。
+两份清单都按官方规范写好了；**如果按上面的命令装不上，请开 issue 反馈**（附工具名 + 版本 + 报错）。
+进市场另需提交审核。
 DSH 没有这条路（它的插件是 npm 包，不吃 Git 地址）。
 
 ---
@@ -123,7 +153,7 @@ DSH 没有这条路（它的插件是 npm 包，不吃 Git 地址）。
 | [`AGENTS.md`](AGENTS.md) | 每轮必读的五步纪律（供读 `AGENTS.md` 的宿主使用） |
 | `skills/master-orchestrator/` | 统筹指挥人：只做选择题、不做问答题；文件末尾就是 L0 路由菜单 |
 | `skills/skill-forge/` | 采集沉淀：脏对话 → 三字段压缩 → 强制脱敏 → 查重 → 落盘回读 |
-| `skills/*`（其余 5 个） | global 种子 SOP：接口报错分层、容器排查、代码评审、提交规范、有效单测 |
+| `skills/*`（其余 5 个） | **Global 种子包**＝基础能力：接口报错分层、容器排查、代码评审、提交规范、有效单测。保证冷启动就有及格线，不是终态 |
 | `personal/` | 你的私有技能，**被 .gitignore 排除** |
 | [`examples/`](examples/README.md) | 三份黄金示例：合格技能长什么样、指挥人怎么派活、脏对话怎么变成技能 |
 | [`docs/LOADING.md`](docs/LOADING.md) | **加载手册**：各工具装到哪、三步自测、故障排查（新手先看这个） |

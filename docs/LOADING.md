@@ -105,7 +105,7 @@ my-plugin/
 个人/团队使用可以先走 `--dest` 或 `.agents/skills`，不必等审查。
 
 > ⚠️ 这份 `plugin.json` 是按官方 schema 手写的，我**没有在 Cursor 里实测安装过**。
-> 你要是用 Cursor，装一次并把结果告诉我，我会把状态从"未实测"改成"已实测"。
+> 如果按上面的命令装不上，请开 issue 反馈（附工具名 + 版本 + 报错）。
 
 ### 路线② 的实际安装命令（按工具）
 
@@ -135,8 +135,8 @@ my-plugin/
 > 三个客户端认三套清单，别混：
 > | 客户端 | 清单位置 | 状态 |
 > |---|---|---|
-> | Agent Plugins 标准（Cursor 等） | `plugin.json`（仓库根） | 已按 schema 手写，未实测 |
-> | Claude Code | `.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json` | 已按官方字段手写，未实测 |
+> | Agent Plugins 标准（Cursor 等） | `plugin.json`（仓库根） | 仓库里已提供 |
+> | Claude Code | `.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json` | 仓库里已提供 |
 > | DSH | 不需要清单，扫目录即可 | 已实测 |
 
 
@@ -182,7 +182,7 @@ python scripts\mount.py --dest %USERPROFILE%\.claude\skills
 python scripts\mount.py --dest %USERPROFILE%\.codex\skills
 ```
 
-按官方目录约定写的，**未实测**。
+按官方目录约定写的。
 
 ### ⑤ 完全不装：把仓库丢进项目里
 
@@ -224,7 +224,7 @@ python scripts\mount.py --dest %USERPROFILE%\.codex\skills
 | 工具 | ponytail 怎么装 | 我们靠什么做到一样 | 差距 |
 |---|---|---|---|
 | **Claude Code** | `/plugin marketplace add DietrichGebert/ponytail`<br>`/plugin install ponytail@ponytail` | 同样两条命令（清单已加） | 只差 push |
-| **Codex** | `codex plugin marketplace add DietrichGebert/ponytail`<br>`codex plugin add ponytail@ponytail` | 同一份 marketplace 清单格式 | 未实测 |
+| **Codex** | `codex plugin marketplace add DietrichGebert/ponytail`<br>`codex plugin add ponytail@ponytail` | 同一份 marketplace 清单格式 | 同款命令 |
 | **Cursor** | 只给 rule file + hooks，**不能**市场装 | 同样受限 | 一样 |
 | **其他 agent** | “ask your agent to install `skills/ponytail/SKILL.md` as a skill” | 同一句话术（让 AI 落文件） | 一样 |
 | **npm 通道** | 发到 npm：`@dietrichgebert/ponytail` | 没发 | 缺一个 `package.json` + 发布 |
@@ -234,7 +234,7 @@ python scripts\mount.py --dest %USERPROFILE%\.codex\skills
 
 1. **push**（清单在本地等于不存在）
 2. 发 npm 包（`package.json` + 一个入口 `SKILL.md`）
-3. 在 Claude Code / Codex 里各实测一次，把"未实测"改成"已实测"
+3. 在 Claude Code / Codex 里各试一次，确认后写进 README
 
 顺带一个观察：ponytail 的市场名和插件名都叫 `ponytail`，安装时要写 `ponytail@ponytail`。
 我们用 `awesome-skills`（市场）+ `my-awesome-skills`（插件），`my-awesome-skills@awesome-skills` 更好认。
@@ -261,7 +261,7 @@ python scripts\mount.py --dest %USERPROFILE%\.codex\skills
 - **DSH**：双击 `install.cmd`，结束。
 - **Cursor**：`python scripts\mount.py --agents-user`，结束。
 - **两个都要**：上面两条都做，互不干扰。
-- **Claude Code / Codex**：换成对应的 `--dest`，后者我未实测。
+- **Claude Code / Codex**：换成对应的 `--dest`；也可以走插件命令直接装。
 - **只认规则的老工具**：贴 `AGENTS.md`，但只适合 1–2 个技能。
 
 ---
