@@ -81,6 +81,11 @@ python scripts/mount.py --unlink --user          # 撤销
 
 `mount.py --help` 可看全部参数。任何不确定的宿主，`--dest` 都能兜底。
 
+**还有第四条路：当插件包用。** 仓库根的 [`plugin.json`](plugin.json) 符合
+[Agent Plugins 1.0](https://agent-plugins.org) 规范，而该规范的包结构（`plugin.json + skills/`）
+与本仓库布局完全一致——所以支持该标准的客户端可以直接把整个仓库当插件加载。
+（清单按官方 schema 手写，尚未在 Cursor 中实测；进市场需另外提交审核。）
+
 ---
 
 ## 目录说明
