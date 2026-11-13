@@ -37,26 +37,32 @@ scripts/   ← 三个零依赖脚本：路由菜单生成与校验 / 脱敏 / �
 
 ## 30 秒上手
 
+### 只想在这个仓库里用：零操作
+
+把仓库 clone 到本地，用 AI 编码工具**打开这个目录**就有技能了。
+（仓库自带 `.dsh/skills` 挂载点，克隆即用，不需要任何命令。）
+
+### 想让所有项目都能用：双击 `install.cmd`
+
+打开仓库文件夹，**双击 `install.cmd`**。出现「新装 7 个」就是装好了。
+
+- 不需要命令行，不需要管理员权限，不复制文件（改仓库立刻生效）。
+- 装到 `~/.dsh/skills`，之后**任何目录、任何新会话**都生效，重启工具也还在。
+- 撤销：双击 `uninstall.cmd`（只删链接，不动你的技能文件）。
+- macOS / Linux：`sh install.sh`。
+
+### 开发者 / 想调参数
+
 ```bash
-# 1. 克隆
-git clone https://github.com/<你的用户名>/my-awesome-skills.git
-cd my-awesome-skills
-
-# 2. 校验 + 生成路由菜单（写进 master-orchestrator 的 L0 块）
-python scripts/scan_skills.py --menu --strict
-
-# 3. 挂载到宿主（默认挂到本仓库 .dsh/skills，仅本目录生效）
-python scripts/mount.py
+python scripts/scan_skills.py --menu --strict   # 校验 + 生成 L0 菜单
+python scripts/mount.py                          # 仅本目录生效
+python scripts/mount.py --user                   # 全局生效（= 双击 install.cmd）
+python scripts/mount.py --dest ~/.claude/skills  # 挂到别的宿主
+python scripts/mount.py --unlink --user          # 撤销
 ```
 
-第 3 步之后，在**本目录内**启动 AI 编码工具，助手就能看到这套技能。想让所有项目都能用，改成挂到用户级：
-
-```bash
-python scripts/mount.py --user            # → ~/.dsh/skills
-python scripts/mount.py --unlink --user   # 撤销
-```
-
-挂载默认用**目录联接/软链**（Windows 用 junction，免管理员权限），所以仓库里改了技能正文，宿主立刻生效，不需要重新挂。
+> 双击版和命令版做的是同一件事，只是前者不依赖 Python。`install.cmd` 内部是
+> `scripts/install.ps1`（PowerShell，Windows 自带）。
 
 ---
 
@@ -77,6 +83,8 @@ python scripts/mount.py --unlink --user   # 撤销
 
 | 路径 | 内容 |
 |---|---|
+| `install.cmd` / `uninstall.cmd` | 双击即装 / 双击即撤（Windows，零命令、不依赖 Python） |
+| `install.sh` | macOS / Linux 版安装脚本 |
 | [`AGENTS.md`](AGENTS.md) | 每轮必读的五步纪律（供读 `AGENTS.md` 的宿主使用） |
 | `skills/master-orchestrator/` | 统筹指挥人：只做选择题、不做问答题；文件末尾就是 L0 路由菜单 |
 | `skills/skill-forge/` | 采集沉淀：脏对话 → 三字段压缩 → 强制脱敏 → 查重 → 落盘回读 |
