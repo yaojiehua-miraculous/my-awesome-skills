@@ -217,6 +217,30 @@ python scripts\mount.py --dest %USERPROFILE%\.codex\skills
 
 ---
 
+## 对照：ponytail 这类技能库靠什么做到"给地址就装"
+
+拿 [ponytail](https://github.com/DietrichGebert/ponytail) 当参照（它的安装方式写在 README 里，可核对）：
+
+| 工具 | ponytail 怎么装 | 我们靠什么做到一样 | 差距 |
+|---|---|---|---|
+| **Claude Code** | `/plugin marketplace add DietrichGebert/ponytail`<br>`/plugin install ponytail@ponytail` | 同样两条命令（清单已加） | 只差 push |
+| **Codex** | `codex plugin marketplace add DietrichGebert/ponytail`<br>`codex plugin add ponytail@ponytail` | 同一份 marketplace 清单格式 | 未实测 |
+| **Cursor** | 只给 rule file + hooks，**不能**市场装 | 同样受限 | 一样 |
+| **其他 agent** | “ask your agent to install `skills/ponytail/SKILL.md` as a skill” | 同一句话术（让 AI 落文件） | 一样 |
+| **npm 通道** | 发到 npm：`@dietrichgebert/ponytail` | 没发 | 缺一个 `package.json` + 发布 |
+
+**结论**：ponytail 和我们走的是**同一条路线**——marketplace 清单 + 一个 `SKILL.md` + `AGENTS.md` 兜底 + npm 发行。
+它没有魔法，只是把四件事都做齐了。我们已有前三件的一半（清单已加），差的都能补：
+
+1. **push**（清单在本地等于不存在）
+2. 发 npm 包（`package.json` + 一个入口 `SKILL.md`）
+3. 在 Claude Code / Codex 里各实测一次，把"未实测"改成"已实测"
+
+顺带一个观察：ponytail 的市场名和插件名都叫 `ponytail`，安装时要写 `ponytail@ponytail`。
+我们用 `awesome-skills`（市场）+ `my-awesome-skills`（插件），`my-awesome-skills@awesome-skills` 更好认。
+
+---
+
 ## 常见故障排查
 
 | 现象 | 原因 | 处理 |
