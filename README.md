@@ -66,14 +66,18 @@ python scripts/mount.py --unlink --user          # 撤销
 
 ---
 
-## 各宿主的挂载位置
+## 各宿主装到哪
 
-| 宿主 | 技能目录 | 命令 |
-|---|---|---|
-| DeepSeek Harness（本项目已实测） | `<项目根>/.dsh/skills` 或 `~/.dsh/skills` | `python scripts/mount.py [--user]` |
-| Claude Code 类 | `~/.claude/skills` | `python scripts/mount.py --dest ~/.claude/skills` |
-| 其他支持 `SKILL.md` 的工具 | 任意目录 | `python scripts/mount.py --dest <路径>` |
-| 不支持 skill 机制的工具 | —— | 把 `AGENTS.md` 作为规则文件放进项目根 |
+| 工具 | 装到这个目录 | 怎么装 | 验证状态 |
+|---|---|---|---|
+| DeepSeek Harness | `~/.dsh/skills` | 双击 `install.cmd` | ✅ 本机实测 |
+| Cursor + DSH 共用 | `~/.agents/skills` | `python scripts/mount.py --agents-user` | ✅ 官方文档 |
+| Cursor 单独 | `~/.cursor/skills` | `python scripts/mount.py --dest %USERPROFILE%\.cursor\skills` | ✅ 官方文档 |
+| Claude Code | `~/.claude/skills` | `python scripts/mount.py --dest %USERPROFILE%\.claude\skills` | 二手证据 |
+| Codex | `~/.codex/skills` | `python scripts/mount.py --dest %USERPROFILE%\.codex\skills` | 未实测 |
+| 只认规则文件的工具 | 项目根 `AGENTS.md` | 贴规则（**降级，非等价**） | —— |
+
+**逐工具的完整装法、三步自测法、故障排查 → [docs/LOADING.md](docs/LOADING.md)**（新手先看那个）
 
 `mount.py --help` 可看全部参数。任何不确定的宿主，`--dest` 都能兜底。
 
@@ -91,6 +95,7 @@ python scripts/mount.py --unlink --user          # 撤销
 | `skills/*`（其余 5 个） | global 种子 SOP：接口报错分层、容器排查、代码评审、提交规范、有效单测 |
 | `personal/` | 你的私有技能，**被 .gitignore 排除** |
 | [`examples/`](examples/README.md) | 三份黄金示例：合格技能长什么样、指挥人怎么派活、脏对话怎么变成技能 |
+| [`docs/LOADING.md`](docs/LOADING.md) | **加载手册**：各工具装到哪、三步自测、故障排查（新手先看这个） |
 | [`docs/COLD_START.md`](docs/COLD_START.md) | 冷启动三问 + 最小装载清单 |
 | [`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md) | F1–F7 验收指标与测量方法 |
 | [`docs/RELEASE.md`](docs/RELEASE.md) | 开源前的三道清洗 + 贡献三问 |

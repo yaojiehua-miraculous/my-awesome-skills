@@ -112,8 +112,10 @@ def collect_sources(only):
 
 def main():
     parser = argparse.ArgumentParser(description="把技能挂载到宿主工具的技能目录")
-    parser.add_argument("--dest", help="目标目录（优先级高于 --user）")
-    parser.add_argument("--user", action="store_true", help="挂到用户级 ~/.dsh/skills")
+    parser.add_argument("--dest", help="目标目录（优先级最高）")
+    parser.add_argument("--user", action="store_true", help="挂到用户级 ~/.dsh/skills（仅 DSH）")
+    parser.add_argument("--agents", action="store_true", help="挂到项目级 .agents/skills（Cursor 与 DSH 都认）")
+    parser.add_argument("--agents-user", action="store_true", help="挂到用户级 ~/.agents/skills（Cursor 与 DSH 都认）")
     parser.add_argument("--only", action="append", metavar="NAME", help="只挂载指定技能，可重复")
     parser.add_argument("--copy", action="store_true", help="复制而不是链接（链接失败时会自动回退）")
     parser.add_argument("--unlink", action="store_true", help="撤销挂载")
@@ -123,6 +125,10 @@ def main():
 
     if args.dest:
         dest = Path(os.path.expanduser(args.dest)).resolve()
+    elif args.agents_user:
+        dest = (Path.home() / ".agents" / "skills").resolve()
+    elif args.agents:
+        dest = (REPO_ROOT / ".agents" / "skills").resolve()
     elif args.user:
         dest = (Path.home() / ".dsh" / "skills").resolve()
     else:
