@@ -107,6 +107,39 @@ my-plugin/
 > ⚠️ 这份 `plugin.json` 是按官方 schema 手写的，我**没有在 Cursor 里实测安装过**。
 > 你要是用 Cursor，装一次并把结果告诉我，我会把状态从"未实测"改成"已实测"。
 
+### 路线② 的实际安装命令（按工具）
+
+**Claude Code —— 真的支持"给个 GitHub 地址就装"**
+
+仓库里除了 `plugin.json`，还放了 Claude Code 自己的两个清单：
+`.claude-plugin/marketplace.json`（市场）和 `.claude-plugin/plugin.json`（插件）。
+
+```text
+# 两步
+/plugin marketplace add yaojiehua-miraculous/my-awesome-skills
+/plugin install my-awesome-skills@awesome-skills
+
+# 或一步（v2.1.275+）
+/plugin install my-awesome-skills --marketplace yaojiehua-miraculous/my-awesome-skills
+```
+
+`marketplace add` 的 `<source>` 直接吃这几种写法（[官方 CLI 参考](https://code.claude.com/docs/en/plugins/cli-reference)）：
+`owner/repo`、`https://github.com/owner/repo`、`user@host:path`、本地路径。
+
+**Cursor —— 市场里搜不到我们（没提交审核），走 `.agents/skills` 或 `--dest`。**
+
+**DSH —— 没有这条路。** 它的插件是 npm 包（`package-name@version` + 版本兼容检查），
+不吃 Git 地址；我们的仓库是纯 Markdown，不是 npm 包。DSH 里的"一句话加载"＝让 AI 把文件
+落到扫描目录（见下方装法 ①/②）。
+
+> 三个客户端认三套清单，别混：
+> | 客户端 | 清单位置 | 状态 |
+> |---|---|---|
+> | Agent Plugins 标准（Cursor 等） | `plugin.json`（仓库根） | 已按 schema 手写，未实测 |
+> | Claude Code | `.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json` | 已按官方字段手写，未实测 |
+> | DSH | 不需要清单，扫目录即可 | 已实测 |
+
+
 
 
 ## 装法（按"动手量"从少到多）

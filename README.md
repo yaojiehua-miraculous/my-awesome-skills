@@ -81,10 +81,22 @@ python scripts/mount.py --unlink --user          # 撤销
 
 `mount.py --help` 可看全部参数。任何不确定的宿主，`--dest` 都能兜底。
 
-**还有第四条路：当插件包用。** 仓库根的 [`plugin.json`](plugin.json) 符合
-[Agent Plugins 1.0](https://agent-plugins.org) 规范，而该规范的包结构（`plugin.json + skills/`）
-与本仓库布局完全一致——所以支持该标准的客户端可以直接把整个仓库当插件加载。
-（清单按官方 schema 手写，尚未在 Cursor 中实测；进市场需另外提交审核。）
+**还有第四条路：当插件包用。** 仓库同时带了两套清单，覆盖两种插件标准：
+
+| 标准 | 清单 | 谁会读 |
+|---|---|---|
+| [Agent Plugins 1.0](https://agent-plugins.org) | [`plugin.json`](plugin.json)（仓库根） | 支持该标准的客户端（如 Cursor） |
+| Claude Code 插件 | [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json) + [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) | Claude Code |
+
+Claude Code 里可以直接给地址装：
+
+```text
+/plugin marketplace add <你的用户名>/my-awesome-skills
+/plugin install my-awesome-skills@awesome-skills
+```
+
+两份清单都是按官方 schema 手写的，**尚未在对应客户端实测**；进市场另需提交审核。
+DSH 没有这条路（它的插件是 npm 包，不吃 Git 地址）。
 
 ---
 

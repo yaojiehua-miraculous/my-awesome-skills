@@ -1,0 +1,19 @@
+{
+  "name": "my-awesome-skills",
+  "version": "1.0.0",
+  "description": "极简 AI 技能引擎：用 YAML 做路由、三级降级做进化、Git 做分发。让每个人自己的经验产生复利。",
+  "author": {
+    "name": "yaojiehua",
+    "url": "https://github.com/yaojiehua-miraculous"
+  },
+  "homepage": "https://github.com/yaojiehua-miraculous/my-awesome-skills",
+  "repository": "https://github.com/yaojiehua-miraculous/my-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "skills",
+    "orchestrator",
+    "routing",
+    "ai-coding"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "awesome-skills",
+  "description": "极简 AI 技能引擎：路由 + 三级降级 + 自动归档，让每个人自己的经验产生复利。",
+  "owner": {
+    "name": "yaojiehua",
+    "url": "https://github.com/yaojiehua-miraculous"
+  },
+  "plugins": [
+    {
+      "name": "my-awesome-skills",
+      "source": ".",
+      "description": "统筹指挥人与采集沉淀，外加接口排错、容器排查、代码评审、提交规范、单元测试 5 份种子 SOP。",
+      "category": "productivity",
+      "tags": [
+        "skills",
+        "orchestrator",
+        "routing",
+        "workflow"
+      ]
+    }
+  ]
+}
